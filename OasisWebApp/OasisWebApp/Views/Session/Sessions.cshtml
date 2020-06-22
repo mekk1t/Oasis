@@ -1,0 +1,33 @@
+﻿@model IEnumerable<OasisWebApp.DTOs.SessionDto>
+
+<h3>Сеансы фильма "@Model.First().Film.Title" в кинотеатре "@Model.First().Cinema.Name"</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SessionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.SessionDate.ToString("dd MMMM")
+            </td>
+            <td>
+                <a asp-controller="Session"
+                   asp-action="Session"
+                   asp-route-Id="@item.SessionId">
+                    @item.StartTime.ToString(@"hh\:mm")
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

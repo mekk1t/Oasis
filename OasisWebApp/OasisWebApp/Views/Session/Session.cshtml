@@ -1,0 +1,51 @@
+﻿@model OasisWebApp.DTOs.SessionDto
+
+<div>
+    <h4>SessionDto</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.SessionDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.SessionDate.ToString("dd MMMM")
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.StartTime.ToString(@"hh\:mm")
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (@Model.Tickets.Count != 0)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-center">Билеты</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="text-center">
+                    <th>Ряд</th>
+                    <th>Место</th>
+                    <th>Цена</th>
+                </tr>
+                @foreach (var ticket in Model.Tickets)
+                {
+                <tr class="text-center">
+                    <td>@ticket.Row</td>
+                    <td>@ticket.Place</td>
+                    <td>@ticket.Price</td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Билетов в продаже нет</p>
+    }
+</div>

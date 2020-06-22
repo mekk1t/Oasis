@@ -1,0 +1,85 @@
+﻿@model OasisWebApp.DTOs.CinemaDto
+
+@{
+    ViewData["Title"] = "Info";
+}
+
+<h1>О кинотеатре</h1>
+
+
+<h2>@Model.Name</h2>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.PhoneNumber)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.PhoneNumber)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Email)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Email)
+    </dd>
+</dl>
+<hr />
+<div>
+    @if (@Model.Address != null)
+    {
+<h2>Адрес</h2>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Address.Address)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Address.Address)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Address.MetroStation)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Address.MetroStation)
+    </dd>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Address.District)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Address.District)
+    </dd>
+</dl>
+    }
+    else
+    {
+        <p>У этого кинотеатра еще нет своего адреса</p>
+    }
+    </div>
+<hr />
+<div>
+@if (@Model.Films.Count != 0)
+{
+    <p>Фильмы в прокате</p>
+    <ul>
+    @foreach (var film in Model.Films)
+    {
+        <li>
+        <a 
+           asp-controller="Film" 
+           asp-action="Film"
+           asp-route-Id="@film.FilmId">@film.Title</a>
+        </li>
+    }
+        </ul>
+} 
+else
+{
+    <p>Фильмов в прокате нет</p>
+}
+</div>
+<div>
+    <a asp-controller="Cinema" 
+       asp-action="Cinemas">Назад</a> | <a asp-controller="Cinema" 
+                                           asp-action="Delete" 
+                                           asp-route-Id=@Model.CinemaId>Удалить</a>
+</div>

@@ -1,0 +1,19 @@
+﻿@model IEnumerable<OasisWebApp.DTOs.CinemaDto>
+
+@{
+    ViewData["Title"] = "Кинотеатры";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="text-left">
+    @foreach (var item in Model)
+    {
+        <a asp-controller="Cinema" asp-action="Cinema" asp-route-Id=@item.CinemaId>@item.Name</a>
+        <br />
+    }
+</div>
+<hr />
+<div>
+    <a asp-controller="Cinema" asp-action="New">Добавить</a>
+</div>

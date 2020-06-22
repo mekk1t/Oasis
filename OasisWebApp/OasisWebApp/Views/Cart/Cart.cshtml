@@ -1,0 +1,33 @@
+﻿<h1>Корзина</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th colspan="6">Ожидает оплаты</th>
+        </tr>
+        <tr>
+            <th>Время сеанса</th>
+            <th>Кинотеатр</th>
+            <th>Фильм</th>
+            <th>Ряд</th>
+            <th>Место</th>
+            <th>Стоимость</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 1; i < 4; i++)
+        {
+            <tr>
+                <td>10:00</td>
+                <td>Юбилейный</td>
+                <td>Семь</td>
+                <td>4</td>
+                <td>@i</td>
+                <td>300</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br />
+<p>К оплате: 900</p>
+
