@@ -25,7 +25,9 @@ namespace OasisWebApp
             services.CookieSettings();
             services.AddRepositories();
             services.AddServices();
-            services.AddControllersWithViews().AddNewtonsoftJson(
+            services.AddControllersWithViews()
+                .AddRazorRuntimeCompilation()
+                .AddNewtonsoftJson(
                 options => options
                 .SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OasisWebApp.CinemaService.Services;
 using OasisWebApp.CinemaService.Services.Interface;
-using OasisWebApp.Services.AccountService.Service;
+using OasisWebApp.Services.AccountService;
 using OasisWebApp.Services.FilmService.Services;
 using OasisWebApp.Services.FilmService.Services.Interface;
 using OasisWebApp.Services.SessionService.Services;
@@ -17,8 +17,7 @@ namespace OasisWebApp.Extensions
             services.AddScoped<ICinemaService, CinemasService>();
             services.AddScoped<IFilmService, FilmService>();
             services.AddScoped<ISessionService, SessionService>();
-            services.AddScoped<SignService>();
-            services.AddScoped<UserService>();
+            services.AddScoped<AccountService>();
 
             return services;
         }
