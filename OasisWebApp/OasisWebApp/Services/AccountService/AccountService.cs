@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using OasisWebApp.DTOs;
 using OasisWebApp.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OasisWebApp.Services.AccountService

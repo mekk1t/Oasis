@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OasisWebApp.Database;
 
 namespace OasisWebApp.Migrations
 {
     [DbContext(typeof(OasisCinemaDbContext))]
-    partial class OasisCinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200623043633_drop_users")]
+    partial class drop_users
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,12 +56,6 @@ namespace OasisWebApp.Migrations
                     b.Property<string>("CartId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsCheckedOut")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("CartId");
 
                     b.ToTable("Cart");
@@ -67,8 +63,10 @@ namespace OasisWebApp.Migrations
 
             modelBuilder.Entity("OasisWebApp.Database.Entities.CartItem", b =>
                 {
-                    b.Property<string>("CartItemId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("CartId")
                         .HasColumnType("nvarchar(450)");

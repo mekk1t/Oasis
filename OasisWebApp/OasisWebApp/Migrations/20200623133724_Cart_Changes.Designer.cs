@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OasisWebApp.Database;
 
 namespace OasisWebApp.Migrations
 {
     [DbContext(typeof(OasisCinemaDbContext))]
-    partial class OasisCinemaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200623133724_Cart_Changes")]
+    partial class Cart_Changes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

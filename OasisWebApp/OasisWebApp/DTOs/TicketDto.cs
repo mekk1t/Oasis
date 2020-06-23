@@ -1,5 +1,4 @@
-﻿
-namespace OasisWebApp.DTOs
+﻿namespace OasisWebApp.DTOs
 {
     public class TicketDto
     {

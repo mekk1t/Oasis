@@ -7,7 +7,7 @@ namespace OasisWebApp.Database.Entities
     {
         public int OrderId { get; set; }
         public DateTime CompletedOn { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public ICollection<Ticket> Tickets { get; set; }
     }
 }

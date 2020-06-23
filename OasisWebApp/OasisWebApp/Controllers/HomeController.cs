@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using OasisWebApp.Controllers.Custom;
 using OasisWebApp.Models;
@@ -15,7 +16,7 @@ namespace OasisWebApp.Controllers
         }
         [Route("Privacy")]
         public IActionResult Privacy()
-        { 
+        {
             ViewData["Title"] = "Privacy, madafakaaaa";
             return View();
         }

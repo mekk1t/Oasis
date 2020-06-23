@@ -2,7 +2,7 @@
 using OasisWebApp.DTOs;
 using OasisWebApp.Database.Entities;
 using System;
-using Microsoft.AspNetCore.Identity;
+using System.Linq;
 
 namespace OasisWebApp.Mapper
 {
@@ -43,12 +43,21 @@ namespace OasisWebApp.Mapper
 
             CreateMap<FilmDto, Film>();
 
-            CreateMap<UserDto, IdentityUser>()
-                .ForMember(d => d.UserName, opt => opt.MapFrom(src => src.Username))
-                .ForMember(d => d.PasswordHash, opt => opt.MapFrom(src => src.Password));
-            CreateMap<IdentityUser, UserDto>()
-                .ForMember(d => d.Username, opt => opt.MapFrom(src => src.UserName))
-                .ForMember(d => d.Password, opt => opt.MapFrom(src => src.PasswordHash));
+            CreateMap<Ticket, TicketDto>();
+            CreateMap<TicketDto, Ticket>();
+
+            CreateMap<CartItem, CartItemDto>();
+            CreateMap<CartItemDto, CartItem>();
+
+
+            CreateMap<Cart, CartDto>()
+                .AfterMap((src, dto) =>
+                {
+                    foreach (var cartItem in src.CartItems)
+                    {
+                        dto.Total = dto.Total + cartItem.Ticket.Price;
+                    }
+                });
 
         }
     }
