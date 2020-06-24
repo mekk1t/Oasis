@@ -30,7 +30,6 @@ namespace OasisWebApp
                 .AddNewtonsoftJson(
                 options => options
                 .SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAutoMapper(typeof(OasisWebAppProfile));
             services.AddRazorPages();
         }

@@ -1,10 +1,17 @@
-﻿<h1>Личный кабинет</h1>
+﻿@using System.Security.Claims;
+<h1>Личный кабинет</h1>
 
 <dl class="row">
     <dt class="col sm-2">
-        Имя пользователя
+        Identity.Name
     </dt>
     <dd class="col sm-10">
         @User.Identity.Name
+    </dd>
+    <dt class="col sm-2">
+        Identity.NameID
+    </dt>
+    <dd class="col sm-10">
+        @User.FindFirstValue(ClaimTypes.NameIdentifier)
     </dd>
 </dl>
