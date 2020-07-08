@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace OasisWebApp.Services.AccountService.Controller
 {
-    // TODO: избавиться от переадресации на ORderController? И просто обращаться к OrderService + TicketService
     public class AccountController : CustomController
     {
         private readonly AccountService accountService;

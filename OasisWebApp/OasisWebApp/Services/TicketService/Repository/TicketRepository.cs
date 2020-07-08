@@ -22,7 +22,7 @@ namespace OasisWebApp.Services.TicketService.Repository
 
         public async Task UpdateTicketAsync (int ticketId, int orderId)
         {
-            var ticket = await dbContext.Tickets.SingleAsync(t => t.TicketId == ticketId);
+            var ticket = await dbContext.Tickets.SingleOrDefaultAsync(t => t.TicketId == ticketId);
             ticket.OrderId = orderId;
             dbContext.Tickets.Update(ticket);
             await dbContext.SaveChangesAsync();

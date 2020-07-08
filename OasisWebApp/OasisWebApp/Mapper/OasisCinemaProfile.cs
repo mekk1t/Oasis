@@ -54,7 +54,10 @@ namespace OasisWebApp.Mapper
                 {
                     foreach (var cartItem in src.CartItems)
                     {
-                        dto.Total = dto.Total + cartItem.Ticket.Price;
+                        if (cartItem.Ticket != null)
+                        {
+                            dto.Total = dto.Total + cartItem.Ticket.Price;
+                        }
                     }
                 });
 

@@ -32,8 +32,7 @@ namespace OasisWebApp.Services.OrderService.Repository
             var order = new Order()
             {
                 CompletedOn = DateTime.Now,
-                UserId = userId,
-                Tickets = tickets                
+                UserId = userId               
             };
             var result = await dbContext.Orders.AddAsync(order);
             await dbContext.SaveChangesAsync();

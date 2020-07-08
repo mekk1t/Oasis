@@ -31,6 +31,7 @@ namespace OasisWebApp.Services.OrderService
             return ordersDto;
         }
 
+        // TODO: вместо поочередного Id-обновления закинуть сразу коллекцию
         public async Task CreateOrderAsync(string userId, ICollection<TicketDto> ticketsDto)
         {
             var tickets = mapper.Map<ICollection<Ticket>>(ticketsDto);

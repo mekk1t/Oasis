@@ -1,33 +1,60 @@
-﻿<h1>Корзина</h1>
+﻿@model OasisWebApp.DTOs.CartDto
 
-<table>
-    <thead>
-        <tr>
-            <th colspan="6">Ожидает оплаты</th>
-        </tr>
-        <tr>
-            <th>Время сеанса</th>
-            <th>Кинотеатр</th>
-            <th>Фильм</th>
-            <th>Ряд</th>
-            <th>Место</th>
-            <th>Стоимость</th>
-        </tr>
-    </thead>
-    <tbody>
-        @for (int i = 1; i < 4; i++)
-        {
+<h1>Корзина</h1>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            ID корзины:
+        </dt>
+        <dd class="col-sm-10">
+            @Model.CartId
+        </dd>
+    </dl>
+</div>
+<div>
+    <table>
+        <thead>
             <tr>
-                <td>10:00</td>
-                <td>Юбилейный</td>
-                <td>Семь</td>
-                <td>4</td>
-                <td>@i</td>
-                <td>300</td>
+                <th class="text-center">Билеты</th>
             </tr>
-        }
-    </tbody>
-</table>
-<br />
-<p>К оплате: 900</p>
+        </thead>
+        <tbody>
+            <tr class="text-center">
+                <th>Ряд</th>
+                <th>Место</th>
+                <th>Цена</th>
+            </tr>
+            @foreach (var cartItem in Model.CartItems)
+            {
+                <tr class="text-center">
+                    <td>@cartItem.Ticket.Row</td>
+                    <td>@cartItem.Ticket.Place</td>
+                    <td>@cartItem.Ticket.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<hr />
+<strong>К ОПЛАТЕ:</strong> <p>@Model.Total</p>
+
+<div>
+    <ul>
+        <li>
+            <a
+               asp-controller="Cart" 
+               asp-action="Checkout">Оплатить                
+            </a>
+        </li>
+        <li>
+            <a
+               asp-controller="Cart"
+               asp-action="DeleteCart">Очистить корзину
+            </a>
+        </li>
+    </ul>
+</div>
+
+
 

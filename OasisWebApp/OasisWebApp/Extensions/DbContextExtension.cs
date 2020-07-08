@@ -10,7 +10,8 @@ namespace OasisWebApp.Extensions
         public static IServiceCollection AddDatabase(
             this IServiceCollection services, IConfiguration Configuration)
         {            
-            services.AddDbContext<OasisCinemaDbContext>(options =>
+            services.AddDbContext<OasisCinemaDbContext>(
+                options =>
                     options.UseSqlServer(Configuration.GetConnectionString("SQLConnection")));
 
             return services;

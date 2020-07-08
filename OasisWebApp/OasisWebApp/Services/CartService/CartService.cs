@@ -29,7 +29,8 @@ namespace OasisWebApp.Services.CartService
 
         public async Task DeleteCartAsync(string cartId)
         {
-            await cartRepository.DeleteCartAsync(cartId);
+            var cartItems = await cartRepository.DeleteCartAsync(cartId);
+            await cartRepository.RemoveItems(cartItems);
         }
         public async Task<CartDto> GetCartAsync(string userId)
         {
@@ -45,7 +46,7 @@ namespace OasisWebApp.Services.CartService
             return cartDto;
         }
 
-        public async Task RemoveItemsAsync(string cartItemId, string cartId)
+        public async Task RemoveItemAsync(string cartItemId, string cartId)
         {
             await cartRepository.RemoveItemAsync(cartItemId, cartId);
         }

@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OasisWebApp.Database;
 using OasisWebApp.Database.Entities;
 using OasisWebApp.Services.TicketService.Repository;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace OasisWebApp.Services.CartService.Repository
@@ -25,32 +23,41 @@ namespace OasisWebApp.Services.CartService.Repository
 
         public async Task<Cart> Checkout(string cartId)
         {
-            var cart = await dbContext.Cart.SingleAsync(c => c.CartId == cartId);
+            var cart = await dbContext.Cart
+                .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.Ticket)
+                .SingleOrDefaultAsync(c => c.CartId == cartId);
             cart.IsCheckedOut = true;
+            dbContext.Cart.Update(cart);
+            await dbContext.SaveChangesAsync();
             return cart;
         }
 
-        public async Task DeleteCartAsync(string cartId)
+        public async Task<ICollection<CartItem>> DeleteCartAsync(string cartId)
         {
-            var cart = await dbContext.Cart.SingleAsync(c => c.CartId == cartId);
+            var cart = await dbContext.Cart
+                .Include(c => c.CartItems)
+                .SingleOrDefaultAsync(c => c.CartId == cartId);
             dbContext.Cart.Remove(cart);
             await dbContext.SaveChangesAsync();
+            return cart.CartItems;
         }
-
-        public async Task<Cart> GetCartAsync(string userId, string cartId = default)
+        public async Task<Cart> GetCartAsync(string userId = default, string cartId = default)
         {
             if (cartId != default)
             {
                 var cart = await dbContext.Cart
                     .Include(c => c.CartItems)
-                    .SingleAsync(c => c.CartId == cartId && c.UserId == userId);
+                        .ThenInclude(ci => ci.Ticket)
+                    .SingleOrDefaultAsync(c => c.CartId == cartId && c.UserId == userId);
                 return cart;
             }
             else
             {
                 var cart = await dbContext.Cart
                     .Include(c => c.CartItems)
-                    .SingleAsync(c => c.UserId == userId);
+                        .ThenInclude(ci => ci.Ticket)
+                    .SingleOrDefaultAsync(c => c.UserId == userId);
                 return cart;
             }
         }
@@ -68,13 +75,15 @@ namespace OasisWebApp.Services.CartService.Repository
         }
         public async Task RemoveItemAsync(string cartItemId, string cartId)
         {
-            var cartItem = await dbContext.CartItems.SingleAsync(ci => ci.CartItemId == cartItemId);
-            var cart = await GetCartAsync(cartId);
-            if (cart != null)
-            {
-                dbContext.CartItems.Remove(cartItem);
-                await dbContext.SaveChangesAsync();
-            }
+            var cartItem = await dbContext.CartItems.SingleOrDefaultAsync(ci => ci.CartItemId == cartItemId);
+            dbContext.CartItems.Remove(cartItem);
+            await dbContext.SaveChangesAsync();
+        }
+        public Task RemoveItems(ICollection<CartItem> cartItems)
+        {
+            dbContext.CartItems.RemoveRange(cartItems);
+            dbContext.SaveChanges();
+            return Task.CompletedTask;
         }
 
         public async Task AddItemToCartAsync(
@@ -96,7 +105,8 @@ namespace OasisWebApp.Services.CartService.Repository
         {
             string cartId = default;
             var cart = await dbContext.Cart
-                .SingleAsync(c => c.UserId == userId);
+                .Include(c => c.CartItems)
+                .SingleOrDefaultAsync(c => c.UserId == userId);
             if (cart != null)
             {
                 cartId = cart.CartId;
@@ -108,6 +118,5 @@ namespace OasisWebApp.Services.CartService.Repository
             }
             return cartId;
         }
-
     }
 }

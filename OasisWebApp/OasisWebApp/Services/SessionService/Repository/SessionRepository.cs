@@ -6,6 +6,7 @@ using OasisWebApp.Services.SessionService.Repository.Filter;
 using OasisWebApp.Services.SessionService.Repository.Interface;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -58,6 +59,18 @@ namespace OasisWebApp.Services.SessionService.Repository
             var session = dbContext.Sessions
                 .Include(s => s.Tickets)
                 .SingleOrDefault(s => s.SessionId == id);
+            ICollection<Ticket> filteredTickets = new Collection<Ticket>();
+            foreach (var filteredTicket in session.Tickets)
+            {
+                if (filteredTicket.OrderId == null)
+                {
+                    filteredTickets.Add(filteredTicket);
+                }
+            }
+            if (filteredTickets.Count != 0)
+            {
+                session.Tickets = filteredTickets;
+            }
             return Task.FromResult(session);
         }
 

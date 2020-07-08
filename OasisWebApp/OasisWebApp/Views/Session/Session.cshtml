@@ -39,6 +39,7 @@
                     <td>@ticket.Row</td>
                     <td>@ticket.Place</td>
                     <td>@ticket.Price</td>
+                    <td><a asp-controller="Cart" asp-action="AddItem" asp-route-TicketId ="@ticket.TicketId">В корзину</a></td>
                 </tr>
                 }
             </tbody>
