@@ -5,11 +5,6 @@ namespace OasisWebApp.Database
 {
     public class OasisCinemaDbContext : DbContext
     {
-        public OasisCinemaDbContext()
-        {
-            Database.EnsureCreated();
-        }
-
         public OasisCinemaDbContext(DbContextOptions<OasisCinemaDbContext> options)
             : base(options)
         {
@@ -29,9 +24,9 @@ namespace OasisWebApp.Database
         #endregion
 
         protected override void
-            OnModelCreating(ModelBuilder modelBuilder)    
-        {                                                 
-            modelBuilder.Entity<CinemaFilm>()             
+            OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CinemaFilm>()
                 .HasKey(x => new { x.CinemaId, x.FilmId});
         }
 

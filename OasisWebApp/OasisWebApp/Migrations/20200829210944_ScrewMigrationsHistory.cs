@@ -3,10 +3,23 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OasisWebApp.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class ScrewMigrationsHistory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Cart",
+                columns: table => new
+                {
+                    CartId = table.Column<string>(nullable: false),
+                    IsCheckedOut = table.Column<bool>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cart", x => x.CartId);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Cinemas",
                 columns: table => new
@@ -15,8 +28,7 @@ namespace OasisWebApp.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    WorkingHours = table.Column<TimeSpan>(nullable: false)
+                    Email = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,7 +58,9 @@ namespace OasisWebApp.Migrations
                 columns: table => new
                 {
                     OrderId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompletedOn = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,7 +73,6 @@ namespace OasisWebApp.Migrations
                 {
                     AddressId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    City = table.Column<string>(nullable: true),
                     Street = table.Column<string>(nullable: true),
                     House = table.Column<string>(nullable: true),
                     MetroStation = table.Column<string>(nullable: true),
@@ -82,8 +95,7 @@ namespace OasisWebApp.Migrations
                 columns: table => new
                 {
                     CinemaId = table.Column<int>(nullable: false),
-                    FilmId = table.Column<int>(nullable: false),
-                    Order = table.Column<byte>(nullable: false)
+                    FilmId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -108,8 +120,8 @@ namespace OasisWebApp.Migrations
                 {
                     SessionId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StartTime = table.Column<DateTime>(nullable: false),
-                    EndTime = table.Column<DateTime>(nullable: false),
+                    SessionDate = table.Column<DateTime>(nullable: false),
+                    StartTime = table.Column<TimeSpan>(nullable: false),
                     FilmId = table.Column<int>(nullable: false),
                     CinemaId = table.Column<int>(nullable: false)
                 },
@@ -128,29 +140,6 @@ namespace OasisWebApp.Migrations
                         principalTable: "Films",
                         principalColumn: "FilmId",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(nullable: true),
-                    Login = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
-                    OrderId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_Users_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,28 +172,28 @@ namespace OasisWebApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderUser",
+                name: "CartItems",
                 columns: table => new
                 {
-                    OrderId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    TotalCost = table.Column<int>(nullable: false)
+                    CartItemId = table.Column<string>(nullable: false),
+                    TicketId = table.Column<int>(nullable: true),
+                    CartId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderUser", x => new { x.OrderId, x.UserId });
+                    table.PrimaryKey("PK_CartItems", x => x.CartItemId);
                     table.ForeignKey(
-                        name: "FK_OrderUser_Orders_OrderId",
-                        column: x => x.OrderId,
-                        principalTable: "Orders",
-                        principalColumn: "OrderId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_CartItems_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Cart",
+                        principalColumn: "CartId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_OrderUser_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_CartItems_Tickets_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "Tickets",
+                        principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -214,14 +203,19 @@ namespace OasisWebApp.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_CartItems_CartId",
+                table: "CartItems",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_TicketId",
+                table: "CartItems",
+                column: "TicketId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CinemaFilm_FilmId",
                 table: "CinemaFilm",
                 column: "FilmId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderUser_UserId",
-                table: "OrderUser",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sessions_CinemaId",
@@ -242,11 +236,6 @@ namespace OasisWebApp.Migrations
                 name: "IX_Tickets_SessionId",
                 table: "Tickets",
                 column: "SessionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_OrderId",
-                table: "Users",
-                column: "OrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -255,22 +244,22 @@ namespace OasisWebApp.Migrations
                 name: "Address");
 
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
                 name: "CinemaFilm");
 
             migrationBuilder.DropTable(
-                name: "OrderUser");
+                name: "Cart");
 
             migrationBuilder.DropTable(
                 name: "Tickets");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Sessions");
-
-            migrationBuilder.DropTable(
-                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Cinemas");

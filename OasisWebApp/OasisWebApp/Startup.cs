@@ -35,6 +35,7 @@ namespace OasisWebApp
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseMigrations();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

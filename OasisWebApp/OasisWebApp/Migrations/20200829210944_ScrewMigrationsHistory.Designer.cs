@@ -10,14 +10,14 @@ using OasisWebApp.Database;
 namespace OasisWebApp.Migrations
 {
     [DbContext(typeof(OasisCinemaDbContext))]
-    [Migration("20200523192140_OrderUserRelationship")]
-    partial class OrderUserRelationship
+    [Migration("20200829210944_ScrewMigrationsHistory")]
+    partial class ScrewMigrationsHistory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
+                .HasAnnotation("ProductVersion", "3.1.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -30,9 +30,6 @@ namespace OasisWebApp.Migrations
 
                     b.Property<int>("CinemaId")
                         .HasColumnType("int");
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("District")
                         .HasColumnType("nvarchar(max)");
@@ -54,6 +51,42 @@ namespace OasisWebApp.Migrations
                     b.ToTable("Address");
                 });
 
+            modelBuilder.Entity("OasisWebApp.Database.Entities.Cart", b =>
+                {
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsCheckedOut")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CartId");
+
+                    b.ToTable("Cart");
+                });
+
+            modelBuilder.Entity("OasisWebApp.Database.Entities.CartItem", b =>
+                {
+                    b.Property<string>("CartItemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("CartId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("TicketId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("TicketId");
+
+                    b.ToTable("CartItems");
+                });
+
             modelBuilder.Entity("OasisWebApp.Database.Entities.Cinema", b =>
                 {
                     b.Property<int>("CinemaId")
@@ -70,9 +103,6 @@ namespace OasisWebApp.Migrations
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("WorkingHours")
-                        .HasColumnType("time");
-
                     b.HasKey("CinemaId");
 
                     b.ToTable("Cinemas");
@@ -85,9 +115,6 @@ namespace OasisWebApp.Migrations
 
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
-
-                    b.Property<byte>("Order")
-                        .HasColumnType("tinyint");
 
                     b.HasKey("CinemaId", "FilmId");
 
@@ -133,27 +160,15 @@ namespace OasisWebApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime>("CompletedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("OasisWebApp.Database.Entities.OrderUser", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
-
-                    b.HasKey("OrderId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("OrderUser");
                 });
 
             modelBuilder.Entity("OasisWebApp.Database.Entities.Session", b =>
@@ -166,14 +181,14 @@ namespace OasisWebApp.Migrations
                     b.Property<int>("CinemaId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<DateTime>("SessionDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
 
                     b.HasKey("SessionId");
 
@@ -215,30 +230,6 @@ namespace OasisWebApp.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("OasisWebApp.Database.Entities.User", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Login")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("OasisWebApp.Database.Entities.Address", b =>
                 {
                     b.HasOne("OasisWebApp.Database.Entities.Cinema", null)
@@ -246,6 +237,17 @@ namespace OasisWebApp.Migrations
                         .HasForeignKey("OasisWebApp.Database.Entities.Address", "CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("OasisWebApp.Database.Entities.CartItem", b =>
+                {
+                    b.HasOne("OasisWebApp.Database.Entities.Cart", null)
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId");
+
+                    b.HasOne("OasisWebApp.Database.Entities.Ticket", "Ticket")
+                        .WithMany()
+                        .HasForeignKey("TicketId");
                 });
 
             modelBuilder.Entity("OasisWebApp.Database.Entities.CinemaFilm", b =>
@@ -259,21 +261,6 @@ namespace OasisWebApp.Migrations
                     b.HasOne("OasisWebApp.Database.Entities.Film", "Film")
                         .WithMany("CinemasLink")
                         .HasForeignKey("FilmId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("OasisWebApp.Database.Entities.OrderUser", b =>
-                {
-                    b.HasOne("OasisWebApp.Database.Entities.Order", "Order")
-                        .WithMany("UsersLink")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("OasisWebApp.Database.Entities.User", "User")
-                        .WithMany("OrdersLink")
-                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

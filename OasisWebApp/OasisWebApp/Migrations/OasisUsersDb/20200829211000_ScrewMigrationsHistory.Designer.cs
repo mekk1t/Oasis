@@ -10,8 +10,8 @@ using OasisWebApp.Database;
 namespace OasisWebApp.Migrations.OasisUsersDb
 {
     [DbContext(typeof(OasisUsersDbContext))]
-    [Migration("20200622113001_UsersDatabase")]
-    partial class UsersDatabase
+    [Migration("20200829211000_ScrewMigrationsHistory")]
+    partial class ScrewMigrationsHistory
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

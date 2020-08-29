@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OasisWebApp.Migrations.OasisUsersDb
 {
-    public partial class UsersDatabase : Migration
+    public partial class ScrewMigrationsHistory : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
